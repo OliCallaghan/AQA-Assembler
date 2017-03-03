@@ -28,7 +28,8 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
+  
     ipcMain.on('run', (event, arg) => {
         addon.run(arg, function (registers) {
             event.sender.send('registers', registers);
