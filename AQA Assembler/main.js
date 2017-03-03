@@ -28,11 +28,27 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
   mainWindow.webContents.openDevTools()
     ipcMain.on('run', (event, arg) => {
         addon.run(arg, function (registers) {
             event.sender.send('registers', registers);
+        });
+    });
+
+    ipcMain.on('save', (event, arg) => {
+        fs.writeFile(arg.path, arg.data, function (err) {
+            event.returnValue = true;
+        })
+    });
+
+    ipcMain.on('selectfile', (event, arg) => {
+        console.log('hello!');
+        event.sender.send('selectedfile', dialog.showOpenDialog({properties: ['openFile']}));
+    });
+
+    ipcMain.on('open', (event, arg) => {
+        fs.readFile(arg, function (err, data) {
+            event.sender.send('opened', data);
         });
     });
 
@@ -69,5 +85,3 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-console.log('This should be eight:', addon.run("/Users/Oli/Documents/CRGS/Computer Science Society/AQA Assembler/AQA Assembler/test.asm"))
