@@ -14,6 +14,10 @@
 #include <list>
 #include <regex>
 
+#include <node.h>
+
+using namespace v8;
+
 struct label {
     std::string name;
     unsigned long ln;
@@ -30,91 +34,79 @@ struct params {
 
 inline bool isInteger(const std::string &s) {
     if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false;
-    
+
     char* p;
     strtol(s.c_str(), &p, 10);
-    
+
     return (*p == 0);
 }
 
 params extractRegisterParameters(std::string line) {
     params p;
-    
-    try {
-        std::regex expr("R([0-9]+)");
-        std::sregex_iterator next(line.begin(), line.end(), expr);
-        std::sregex_iterator end;
-        
-        int size = 0;
-        
-        while (next != end) {
-            std::smatch match = *next;
-            size++;
-            p.data.push_back(atoi(match.str().substr(1,match.str().length() -1).c_str()));
-            p.pos.push_back(static_cast<int>(match.position()));
-            p.type.push_back(0);
-            
-            std::cout << "Register: " << p.data[size - 1] << "\n";
-            next++;
-        }
-    } catch (std::regex_error& e) {
-        // Syntax Error
+
+    std::regex expr("R([0-9]+)");
+    std::sregex_iterator next(line.begin(), line.end(), expr);
+    std::sregex_iterator end;
+
+    int size = 0;
+
+    while (next != end) {
+        std::smatch match = *next;
+        size++;
+        p.data.push_back(atoi(match.str().substr(1,match.str().length() -1).c_str()));
+        p.pos.push_back(static_cast<int>(match.position()));
+        p.type.push_back(0);
+
+        std::cout << "Register: " << p.data[size - 1] << "\n";
+        next++;
     }
-    
+
     return p;
 }
 
 params extractImmediateParameters(std::string line) {
     params p;
-    
-    try {
-        std::regex expr("#([0-9]+)");
-        std::sregex_iterator next(line.begin(), line.end(), expr);
-        std::sregex_iterator end;
-        
-        int size = 0;
-        
-        while (next != end) {
-            std::smatch match = *next;
-            size++;
-            p.data.push_back(atoi(match.str().substr(1,match.str().length() -1).c_str()));
-            p.pos.push_back(static_cast<int>(match.position()));
-            p.type.push_back(1);
-            
-            std::cout << "Immediate: " << p.data[size - 1] << "\n";
-            next++;
-        }
-    } catch (std::regex_error& e) {
-        // Syntax Error
+
+    std::regex expr("#([0-9]+)");
+    std::sregex_iterator next(line.begin(), line.end(), expr);
+    std::sregex_iterator end;
+
+    int size = 0;
+
+    while (next != end) {
+        std::smatch match = *next;
+        size++;
+        p.data.push_back(atoi(match.str().substr(1,match.str().length() -1).c_str()));
+        p.pos.push_back(static_cast<int>(match.position()));
+        p.type.push_back(1);
+
+        std::cout << "Immediate: " << p.data[size - 1] << "\n";
+        next++;
     }
-    
+
     return p;
 }
 
 params extractDirectParameters(std::string line) {
     params p;
-    
-    try {
-        std::regex expr("[,\\s]([0-9]+)");
-        std::sregex_iterator next(line.begin(), line.end(), expr);
-        std::sregex_iterator end;
-        
-        int size = 0;
-        
-        while (next != end) {
-            std::smatch match = *next;
-            size++;
-            p.data.push_back(atoi(match.str().substr(1,match.str().length() -1).c_str()));
-            p.pos.push_back(static_cast<int>(match.position()));
-            p.type.push_back(2);
-            
-            std::cout << "Direct: " << p.data[size - 1] << "\n";
-            next++;
-        }
-    } catch (std::regex_error& e) {
-        // Syntax Error
+
+    std::regex expr("[,\\s]([0-9]+)");
+    std::sregex_iterator next(line.begin(), line.end(), expr);
+    std::sregex_iterator end;
+
+    int size = 0;
+
+    while (next != end) {
+        std::smatch match = *next;
+        size++;
+        p.data.push_back(atoi(match.str().substr(1,match.str().length() -1).c_str()));
+        p.pos.push_back(static_cast<int>(match.position()));
+        p.type.push_back(2);
+
+        std::cout << "Direct: " << p.data[size - 1] << "\n";
+        next++;
     }
-    
+
     return p;
 }
 
@@ -123,7 +115,7 @@ params combineParamsInOrder(params p_r, params p_i, params p_d) {
     while ((p_r.data.size() > 0) || (p_i.data.size() > 0) || (p_d.data.size() > 0)) {
         char p_smallest = 0;
         long int p_smallest_data = 0;
-        
+
         if (p_r.pos.size() > 0) {
             p_smallest_data = p_r.pos[0];
         } else if (p_i.pos.size() > 0) {
@@ -133,21 +125,21 @@ params combineParamsInOrder(params p_r, params p_i, params p_d) {
             p_smallest_data = p_d.pos[0];
             p_smallest = 2;
         }
-        
+
         if (p_i.pos.size() > 0) {
             if (p_i.pos[0] < p_smallest_data) {
                 p_smallest_data = p_i.pos[0];
                 p_smallest = 1;
             }
         }
-        
+
         if (p_d.pos.size() > 0) {
             if (p_d.pos[0] < p_smallest_data) {
                 p_smallest_data = p_d.pos[0];
                 p_smallest = 2;
             }
         }
-        
+
         if (p_smallest == 0) {
             p.data.push_back(p_r.data[0]);
             p.pos.push_back(p_r.pos[0]);
@@ -177,13 +169,13 @@ params combineParamsInOrder(params p_r, params p_i, params p_d) {
 class aqa_assembler_vm {
     // Initialise Memory Registers
     unsigned long int r[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
-    
+
     // Initialise Virtual Memory Block
     unsigned long int *memory;
-    
+
     // Initialise Label Storage
     std::vector<label> labels;
-    
+
     // Status Register
     //  0 = Equal
     //  1 = Greater Than
@@ -198,25 +190,33 @@ public:
         memory = (unsigned long int*) calloc(memory_size, sizeof(unsigned long int));
         labels = labels_data;
     }
-    
+
     // Destructor
     ~aqa_assembler_vm() {
         // Remove Memory
         free(memory);
     }
-    
+
+    unsigned long int getRegisterData(int reg) {
+        return r[reg];
+    }
+
+    unsigned long int getMemoryData(long loc) {
+        return memory[loc];
+    }
+
     // Load the value stored at memory location 'm' into register 'r'
     int LDR(unsigned int r, unsigned long int m) {
         this->r[r] = memory[m];
         return 0;
     }
-    
+
     // Store the value stored in register 'r' at memory location 'm'
     int STR(unsigned int r, unsigned long m) {
         memory[m] = this->r[r];
         return 0;
     }
-    
+
     // Add the data stored in register 'r_i0' to the contents of register 'r_i1' and store in 'r_o'
     int ADD(unsigned int r_o, unsigned int r_i0, unsigned long int r_i1, bool direc_addr) {
         if (direc_addr) {
@@ -226,7 +226,7 @@ public:
         }
         return 0;
     }
-    
+
     // Subtract the data stored in register 'r_i0' to the contents of register 'r_i1' and store in 'r_o'
     int SUB(unsigned int r_o, unsigned int r_i0, unsigned int r_i1, bool direc_addr) {
         if (direc_addr) {
@@ -236,7 +236,7 @@ public:
         }
         return 0;
     }
-    
+
     // Move the data 'd' into register 'r'
     int MOV(unsigned int r_o, unsigned long int r_0, bool direct_addr) {
         if (direct_addr) {
@@ -244,10 +244,10 @@ public:
         } else {
             r[r_o] = r_0;
         }
-        
+
         return 0;
     }
-    
+
     // Compare the data stored in register 'r_o' to the data stored in 'r_1' or 'r_1' (dependent on addressing mode)
     int CMP(unsigned int r_0, unsigned long int r_1, bool direct_addr) {
         if (direct_addr) {
@@ -284,7 +284,7 @@ public:
         }
         return 1;
     }
-    
+
     // Branch to instruction at label
     int B(std::string label, unsigned long *pc) {
         // Branch
@@ -293,10 +293,10 @@ public:
                 *pc = labels[l].ln;
             }
         }
-        
+
         return 0;
     }
-    
+
     // Branch to instruction at label if status register is 0 (equal)
     int BEQ(std::string label, unsigned long *pc) {
         if (sr == 0) {
@@ -305,7 +305,7 @@ public:
         }
         return 0;
     }
-    
+
     // Branch to instruction at label if status register is 0 (equal)
     int BGT(std::string label, unsigned long *pc) {
         if (sr == 1) {
@@ -314,7 +314,7 @@ public:
         }
         return 0;
     }
-    
+
     // Branch to instruction at label if status register is 0 (equal)
     int BLT(std::string label, unsigned long *pc) {
         if (sr == 2) {
@@ -323,7 +323,7 @@ public:
         }
         return 0;
     }
-    
+
     // Branch to instruction at label if status register is 0 (equal)
     int BNE(std::string label, unsigned long *pc) {
         if (sr == 3) {
@@ -332,7 +332,7 @@ public:
         }
         return 0;
     }
-    
+
     // Perform bitwise AND on the data stored in register 'r_i0' with the contents of register 'r_i1' (or the data 'r_i1' depending on addressing mode) and store in 'r_o'
     int AND(unsigned int r_o, unsigned int r_i0, unsigned long int r_i1, bool direct_addr) {
         if (direct_addr) {
@@ -342,7 +342,7 @@ public:
         }
         return 0;
     }
-    
+
     // Perform bitwise OR on the data stored in register 'r_i0' with the contents of register 'r_i1' (or the data 'r_i1' depending on addressing mode) and store in 'r_o'
     int ORR(unsigned int r_o, unsigned int r_i0, unsigned long int r_i1, bool direct_addr) {
         if (direct_addr) {
@@ -352,7 +352,7 @@ public:
         }
         return 0;
     }
-    
+
     // Perform bitwise XOR on the data stored in register 'r_i0' with the contents of register 'r_i1' (or the data 'r_i1' depending on addressing mode) and store in 'r_o'
     int EOR(unsigned int r_o, unsigned int r_i0, unsigned long int r_i1, bool direct_addr) {
         if (direct_addr) {
@@ -362,7 +362,7 @@ public:
         }
         return 0;
     }
-    
+
     // Perform bitwise NOT on the data stored in register 'r_i' (or the data 'r_i' depending on addressing mode) and store in 'r_o'
     int MVN(unsigned int r_o, unsigned int r_i, bool direct_addr) {
         if (direct_addr) {
@@ -372,7 +372,7 @@ public:
         }
         return 0;
     }
-    
+
     // Logically shift left the value stored in register 'r_i0' by the number of bits specified by the contents of register 'r_i1' (or the data 'r_i' depending on addressing mode) and store in 'r_o'
     int LSL(unsigned int r_o, unsigned int r_i0, unsigned long int r_i1, bool direct_addr) {
         if (direct_addr) {
@@ -388,7 +388,7 @@ public:
         }
         return 0;
     }
-    
+
     // Logically shift left the value stored in register 'r_i0' by the number of bits specified by the contents of register 'r_i1' (or the data 'r_i' depending on addressing mode) and store in 'r_o'
     int LSR(unsigned int r_o, unsigned int r_i0, unsigned long int r_i1, bool direct_addr) {
         if (direct_addr) {
@@ -404,7 +404,7 @@ public:
         }
         return 0;
     }
-    
+
     void displayRegisters() {
         for (int r_n = 0; r_n < 12; r_n++) {
             std::cout << "R" << r_n << ": " << r[r_n] << "\n";
@@ -412,24 +412,29 @@ public:
     }
 };
 
-int run(std::string entrypoint) {
+void run(const FunctionCallbackInfo<Value>& args) {
+    Isolate* isolate = Isolate::GetCurrent();
+    HandleScope scope(isolate);
+
     // Initialise file reader
+    v8::String::Utf8Value e_b(args[0]->ToString());
+    std::string entrypoint = std::string(*e_b);
     std::ifstream input(entrypoint);
-    
+
     // Initialise program
     std::vector<std::string> program;
-    
+
     for (std::string line; getline( input, line );) {
         // Increase program length and add line to program
         program.resize(program.size() + 1);
         program[program.size() - 1] = line;
     }
-    
+
     input.close();
-    
+
     // Initialise list of labels
     std::vector<label> labels;
-    
+
     for (unsigned long pc = 0; pc < program.size(); pc++) {
         if (program[pc].back() == ':') {
             // Add label to list
@@ -439,10 +444,10 @@ int run(std::string entrypoint) {
             labels.push_back(l);
         }
     }
-    
+
     // Initialise assembler emulator
     aqa_assembler_vm assembler(1024, labels);
-    
+
     for (unsigned long pc = 0; pc < program.size(); pc++) {
         std::string cmd = program[pc].substr(0,4);
         // Lookup command
@@ -452,11 +457,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 2)) {
                     std::cout << "LDR R" << p.data[0] << " " << p.data[1] << "\n";
@@ -473,11 +478,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 2)) {
                     std::cout << "STR R" << p.data[0] << " " << p.data[1] << "\n";
@@ -494,11 +499,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
                     std::cout << "ADD R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
@@ -518,11 +523,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
                     std::cout << "SU  R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
@@ -542,11 +547,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 0)) {
                     std::cout << "ADD R" << p.data[0] << " R" << p.data[1] << "\n";
@@ -566,11 +571,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 0)) {
                     std::cout << "CMP R" << p.data[0] << " R" << p.data[1] << "\n";
@@ -605,11 +610,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
                     std::cout << "AND R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
@@ -629,11 +634,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
                     std::cout << "ORR R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
@@ -653,11 +658,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
                     std::cout << "EOR R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
@@ -677,11 +682,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 0)) {
                     std::cout << "MVN R" << p.data[0] << " R" << p.data[1] << "\n";
@@ -701,11 +706,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
                     std::cout << "LSL R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
@@ -725,11 +730,11 @@ int run(std::string entrypoint) {
             params p_r = extractRegisterParameters(params_s);
             params p_d = extractDirectParameters(params_s);
             params p_i = extractImmediateParameters(params_s);
-            
+
             params p = combineParamsInOrder(p_r, p_i, p_d);
-            
+
             std::cout << p.type[0] << p.type[1];
-            
+
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
                     std::cout << "LSR R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
@@ -750,17 +755,24 @@ int run(std::string entrypoint) {
             // Label
             std::cout << "Reached Label";
         } else {
-            throw "ERROR";
+            // throw "ERROR";
         }
     }
-    
+
     assembler.displayRegisters();
-    
-    return 0;
+
+    Local<Number> r_data =  Number::New(isolate, assembler.getRegisterData(1));
+    args.GetReturnValue().Set(r_data);
 }
 
 int main(int argc, const char * argv[]) {
     std::cout << "AQA Assembler Runtime\n";
-    run("/Users/Oli/Documents/CRGS/Computer Science Society/AQA Assembler/AQA Assembler/test.asm");
+    //run("/Users/Oli/Documents/CRGS/Computer Science Society/AQA Assembler/AQA Assembler/test.asm");
     return 0;
 }
+
+void Init(Handle<Object> exports) {
+    NODE_SET_METHOD(exports, "run", run);
+}
+
+NODE_MODULE(addon, Init)
