@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <deque>
+#include <list>
 #include <regex>
 
 struct label {
@@ -180,6 +181,9 @@ class aqa_assembler_vm {
     // Initialise Virtual Memory Block
     unsigned long int *memory;
     
+    // Initialise Label Storage
+    std::vector<label> labels;
+    
     // Status Register
     //  0 = Equal
     //  1 = Greater Than
@@ -189,9 +193,10 @@ class aqa_assembler_vm {
     char sr = 4;
 public:
     // Constructor
-    aqa_assembler_vm(int memory_size) {
+    aqa_assembler_vm(int memory_size, std::vector<label> labels_data) {
         // Initilaise Memory of Specified Size
         memory = (unsigned long int*) calloc(memory_size, sizeof(unsigned long int));
+        labels = labels_data;
     }
     
     // Destructor
@@ -281,43 +286,49 @@ public:
     }
     
     // Branch to instruction at label
-    int B(std::string label) {
+    int B(std::string label, unsigned long *pc) {
         // Branch
+        for (int l = 0; l < labels.size(); l++) {
+            if (labels[l].name == label) {
+                *pc = labels[l].ln;
+            }
+        }
+        
         return 0;
     }
     
     // Branch to instruction at label if status register is 0 (equal)
-    int BEQ(std::string label) {
+    int BEQ(std::string label, unsigned long *pc) {
         if (sr == 0) {
             // Branch
-            this->B(label);
+            this->B(label, pc);
         }
         return 0;
     }
     
     // Branch to instruction at label if status register is 0 (equal)
-    int BGT(std::string label) {
+    int BGT(std::string label, unsigned long *pc) {
         if (sr == 1) {
             // Branch
-            this->B(label);
+            this->B(label, pc);
         }
         return 0;
     }
     
     // Branch to instruction at label if status register is 0 (equal)
-    int BLT(std::string label) {
+    int BLT(std::string label, unsigned long *pc) {
         if (sr == 2) {
             // Branch
-            this->B(label);
+            this->B(label, pc);
         }
         return 0;
     }
     
     // Branch to instruction at label if status register is 0 (equal)
-    int BNE(std::string label) {
+    int BNE(std::string label, unsigned long *pc) {
         if (sr == 3) {
             // Branch
-            this->B(label);
+            this->B(label, pc);
         }
         return 0;
     }
@@ -416,18 +427,21 @@ int run(std::string entrypoint) {
     
     input.close();
     
+    // Initialise list of labels
     std::vector<label> labels;
     
     for (unsigned long pc = 0; pc < program.size(); pc++) {
         if (program[pc].back() == ':') {
-            // Line denotes a label
-            labels.resize(labels.size() + 1);
-            labels[labels.size() - 1].ln = pc;
-            labels[labels.size() - 1].name = program[pc].substr(0,program[pc].length() - 1);
+            // Add label to list
+            label l;
+            l.name = program[pc].substr(0,program[pc].length() - 1);
+            l.ln = pc;
+            labels.push_back(l);
         }
     }
     
-    aqa_assembler_vm assembler(1024);
+    // Initialise assembler emulator
+    aqa_assembler_vm assembler(1024, labels);
     
     for (unsigned long pc = 0; pc < program.size(); pc++) {
         std::string cmd = program[pc].substr(0,4);
@@ -572,14 +586,19 @@ int run(std::string entrypoint) {
             }
         } else if (program[pc].substr(0,2) == "B ") {
             // Branch
+            assembler.B(program[pc].substr(2,program[pc].length()), &pc);
         } else if (cmd == "BEQ ") {
             // BEQ Command
+            assembler.BEQ(program[pc].substr(4,program[pc].length()), &pc);
         } else if (cmd == "BNE ") {
             // BNE Command
+            assembler.BNE(program[pc].substr(4,program[pc].length()), &pc);
         } else if (cmd == "BGT ") {
             // BGT Command
+            assembler.BGT(program[pc].substr(4,program[pc].length()), &pc);
         } else if (cmd == "BLT ") {
             // BLT Command
+            assembler.BLT(program[pc].substr(4,program[pc].length()), &pc);
         } else if (cmd == "AND ") {
             // AND Command
             std::string params_s = program[pc].substr(4,program[pc].length() - 1);
@@ -724,7 +743,7 @@ int run(std::string entrypoint) {
             } else {
                 std::cout << "Not enough arguements\n";
             }
-        } else if (program[pc].substr(0,5) == "HALT ") {
+        } else if (program[pc].substr(0,4) == "HALT") {
             // HALT
             pc = program.size();
         } else if (program[pc].back() == ':') {

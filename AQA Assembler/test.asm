@@ -2,3 +2,7 @@ MOV R1, #5
 MOV R2, #2
 ADD R3, R1, R2
 CMP R2, R1
+B nope
+ADD R4 R2 R3
+nope:
+HALT
