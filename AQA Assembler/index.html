@@ -8,7 +8,7 @@
   </head>
   <body>
 	<header>
-		<editor-file>example.asm<editor-file-close>&times;</editor-file-close></editor-file>
+		<editor-file><span id="filename">example.asm</span><editor-file-close>&times;</editor-file-close></editor-file>
 	</header>
 	<editor-code>
         <!--
@@ -16,27 +16,27 @@
     		<editor-code-line>MOV R1, #5<br></editor-code-line>
     		<editor-code-line>MOV R1, #5<br></editor-code-line>
         -->
-        <textarea></textarea>
+        <textarea id="code"></textarea>
 	</editor-code>
     <editor-sidebar>
         <editor-sidebar-panel-title>Debug</editor-sidebar-panel-title>
-        <editor-debug-action>Run</editor-debug-action>
+        <editor-debug-action id="run">Run</editor-debug-action>
         <editor-debug-action>Stop</editor-debug-action>
         <editor-debug-action>Step</editor-debug-action>
         <!--<editor-sidebar-panel-title>Console</editor-sidebar-panel-title>-->
         <editor-sidebar-panel-title>Registers</editor-sidebar-panel-title>
-        <editor-debug-register n="0">R0<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="1">R1<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="2">R2<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="3">R3<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="4">R4<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="5">R5<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="6">R6<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="7">R7<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="8">R8<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="9">R9<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="10">R10<br><span id="registerdata">0</span></editor-debug-register>
-        <editor-debug-register n="11">R11<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="0" class="register">R0<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="1" class="register">R1<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="2" class="register">R2<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="3" class="register">R3<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="4" class="register">R4<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="5" class="register">R5<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="6" class="register">R6<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="7" class="register">R7<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="8" class="register">R8<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="9" class="register">R9<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="10" class="register">R10<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="11" class="register">R11<br><span id="registerdata">0</span></editor-debug-register>
         <editor-sidebar-panel-title>Memory</editor-sidebar-panel-title>
         <editor-debug-memorysize>Memory locations 0-1024 are available.</editor-debug-memorysize>
     </editor-sidebar>
