@@ -4,6 +4,9 @@ const electron = require('electron');
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
+const {ipcMain} = require('electron')
+const {dialog} = require('electron')
+const fs = require('fs');
 
 
 const path = require('path')
@@ -26,6 +29,12 @@ function createWindow () {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
+    ipcMain.on('run', (event, arg) => {
+        addon.run(arg, function (registers) {
+            event.sender.send('registers', registers);
+        });
+    });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

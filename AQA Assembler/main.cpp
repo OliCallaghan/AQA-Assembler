@@ -757,6 +757,18 @@ void run(const FunctionCallbackInfo<Value>& args) {
         } else {
             // throw "ERROR";
         }
+
+        // Callback with Register data
+        // unsigned long int r_data[12];
+        Local<Array> r_e_data = Array::New(isolate, 12);
+        for (int r = 0; r < 12; r++) {
+            r_e_data->Set(r, Integer::New(isolate, assembler.getRegisterData(r)));
+        }
+
+        Local<Function> cb = Local<Function>::Cast(args[1]);
+        const unsigned argc = 1;
+        Local<Value> argv[argc] = { r_e_data };
+        cb->Call(Null(isolate), argc, argv);
     }
 
     assembler.displayRegisters();
