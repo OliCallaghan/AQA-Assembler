@@ -1,19 +1,59 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
+	<meta charset="UTF-8">
+	<title>Hello World!</title>
+	<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro:300" rel="stylesheet">
+	<link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+	<header>
+		<editor-file>example.asm<editor-file-close>&times;</editor-file-close></editor-file>
+	</header>
+	<editor-code>
+        <!--
+    		<editor-code-line>MOV R1, #5<br></editor-code-line>
+    		<editor-code-line>MOV R1, #5<br></editor-code-line>
+    		<editor-code-line>MOV R1, #5<br></editor-code-line>
+        -->
+        <textarea></textarea>
+	</editor-code>
+    <editor-sidebar>
+        <editor-sidebar-panel-title>Debug</editor-sidebar-panel-title>
+        <editor-debug-action>Run</editor-debug-action>
+        <editor-debug-action>Stop</editor-debug-action>
+        <editor-debug-action>Step</editor-debug-action>
+        <!--<editor-sidebar-panel-title>Console</editor-sidebar-panel-title>-->
+        <editor-sidebar-panel-title>Registers</editor-sidebar-panel-title>
+        <editor-debug-register n="0">R0<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="1">R1<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="2">R2<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="3">R3<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="4">R4<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="5">R5<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="6">R6<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="7">R7<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="8">R8<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="9">R9<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="10">R10<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-debug-register n="11">R11<br><span id="registerdata">0</span></editor-debug-register>
+        <editor-sidebar-panel-title>Memory</editor-sidebar-panel-title>
+        <editor-debug-memorysize>Memory locations 0-1024 are available.</editor-debug-memorysize>
+    </editor-sidebar>
+
+	<!-- All of the Node.js APIs are available in this renderer process.
+	We are using Node.js <script>document.write(process.versions.node)</script>,
+	Chromium <script>document.write(process.versions.chrome)</script>,
+	and Electron <script>document.write(process.versions.electron)</script>.
+	 -->
   </body>
 
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+  <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
+  <!-- Insert this line after script imports -->
+  <script>if (window.module) module = window.module;</script>
   <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
+	// You can also require other files to run in this process
+	require('./renderer.js');
   </script>
 </html>
