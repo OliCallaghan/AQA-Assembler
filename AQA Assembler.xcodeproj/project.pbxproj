@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		4F1DBAF61E68852600AFDDCE /* AQA Assembler */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "AQA Assembler"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F1DBAF91E68852600AFDDCE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		4F1DBB001E68863700AFDDCE /* test.asm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.asm; path = test.asm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				4F1DBAF91E68852600AFDDCE /* main.cpp */,
+				4F1DBB001E68863700AFDDCE /* test.asm */,
 			);
 			path = "AQA Assembler";
 			sourceTree = "<group>";

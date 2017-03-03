@@ -1,0 +1,4 @@
+MOV R1, #5
+MOV R2, #2
+ADD R3, R1, R2
+CMP R2, R1
