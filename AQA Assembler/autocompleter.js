@@ -109,6 +109,7 @@ $('#code').keydown(function (e) {
 			}
 		}
 	} else if (e.keyCode == 13) {
+		constrict_tab = false;
 		if (e.shiftKey) {
 			e.preventDefault();
 			insert($('editor-autocomplete-cmd.selected'));
@@ -149,7 +150,13 @@ function insert(obj) {
 	}
 
 	var front = code_val.substring(0,pos_min + 1);
-	var back = code_val.substring(pos_max, code_val.length);
+	var back;
+	console.log(pos_min, pos_max);
+	if (pos_min == pos_max) {
+		back = code_val.substring(pos_max + 1, code_val.length);
+	} else {
+		back = code_val.substring(pos_max, code_val.length);
+	}
 
 	code.val(front + insert + back);
 
