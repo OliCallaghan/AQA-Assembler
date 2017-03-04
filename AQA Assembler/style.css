@@ -3,11 +3,6 @@ body {
 	font-family: 'Source Sans Pro', sans-serif;
 }
 
-input {
-	opacity: 0;
-	top:-100px;
-}
-
 header {
 	position: absolute;
 	top: 0px;
@@ -53,7 +48,7 @@ editor-code {
 	width:calc(100% - 210px);
 	border-right: 1px solid #93B0CC;
 	background: #fff;
-	overflow: scroll;
+	overflow: hidden;
 	font-family: 'Source Code Pro', monospace;
 }
 
@@ -69,33 +64,10 @@ editor-code textarea {
 	padding-top: 20px;
 	padding-bottom: 20px;
 	left: 0px;
+	overflow: scroll;
 	font-family: 'Source Code Pro', monospace;
 	resize: none;
 	font-size: 18px;
-}
-
-editor-code-line {
-	position: relative;
-	display: block;
-	background: #fff;
-	width: calc(100% - 10px);
-	padding-left: 5px;
-	padding-right: 5px;
-	transition: background 0.1s;
-	cursor: text;
-}
-
-editor-code-line.focus {
-	background: #f2f2f2;
-}
-
-editor-code-line-caret {
-	position: absolute;;
-	display: inline-block;
-	width: 3px;
-	height: 100%;
-	background: #2E3740;
-	opacity: 0.5;
 }
 
 editor-sidebar {
@@ -106,13 +78,6 @@ editor-sidebar {
 	height: calc(100% - 50px);
 	z-index: -1;
 	overflow: scroll;
-}
-
-editor-sidebar-panel {
-	position: relative;
-	display: block;
-	height: auto;
-	width: 100%;
 }
 
 editor-sidebar-panel-title {
@@ -171,4 +136,73 @@ editor-debug-action {
 editor-debug-action:hover {
 	background: #ccc;
 	cursor: pointer;
+}
+
+editor-autocomplete {
+	display: block;
+	position: absolute;
+	visibility: hidden;
+	opacity: 0.8;
+	background: #f2f2f2;
+	max-height: 300px;
+	max-width: 200px;
+	min-height: 100px;
+	min-width: 150px;
+	opacity: 0;
+	transition: top 0.2s, left 0.2s, opacity 0.2s;
+	border-radius: 2px;
+	overflow: scroll;
+	box-shadow: 0px 0px 5px #AAA;
+}
+
+editor-autocomplete-cmd {
+	width: 100%;
+	display: block;
+	position: relative;
+	color: #2E3740;
+	height: 32px;
+	overflow: hidden;
+	transition: height;
+}
+
+editor-autocomplete-cmd.selected {
+	height: auto;
+	background: #37424D;
+	color: #fff;
+}
+
+editor-autocomplete-cmd cmd-title {
+	display: block;
+	width: calc(100% - 14px);
+	text-align: left;
+	padding-left: 7px;
+	padding-right: 7px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 16px;
+}
+
+editor-autocomplete-cmd.selected cmd-title {
+	background: #2E3740;
+}
+
+editor-autocomplete-cmd cmd-eg {
+	display: block;
+	width: calc(100% - 14px);
+	text-align: left;
+	font-size: 12px;
+	padding-left: 7px;
+	padding-right: 7px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+editor-autocomplete-cmd cmd-desc {
+	display: block;
+	width: calc(100% - 14px);
+	text-align: left;
+	font-size: 12px;
+	padding-left: 7px;
+	padding-right: 7px;
+	padding-bottom: 5px;
 }

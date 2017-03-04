@@ -11,7 +11,94 @@
 		<editor-file><span id="filename">example.asm</span><editor-file-close>&times;</editor-file-close></editor-file>
 	</header>
 	<editor-code>
-        <textarea id="code"></textarea>
+        <textarea id="code" placeholder="// Start Writing AQA Assembler"></textarea>
+        <editor-autocomplete>
+            <editor-autocomplete-cmd cmd="ldr" class="selected">
+                <cmd-title>LDR</cmd-title>
+                <cmd-eg>LDR R&lt;n&gt; &lt;mem&gt;</cmd-eg>
+                <cmd-desc>Loads into register R&lt;n&gt; data from memory location &lt;mem&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="str">
+                <cmd-title>STR</cmd-title>
+                <cmd-eg>STR R&lt;n&gt; &lt;mem&gt;</cmd-eg>
+                <cmd-desc>Stores data from register R&lt;n&gt; at memory location &lt;mem&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="add">
+                <cmd-title>ADD</cmd-title>
+                <cmd-eg>ADD R&lt;o&gt; R&lt;i1&gt; R&lt;i2&gt;</cmd-eg>
+                <cmd-desc>Adds the data stored in register R&lt;i1&gt; to the contents of register R&lt;i2&gt; (or immediate value) and stores in RR&lt;o&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="sub">
+                <cmd-title>SUB</cmd-title>
+                <cmd-eg>SUB R&lt;o&gt; R&lt;i1&gt; R&lt;i2&gt;</cmd-eg>
+                <cmd-desc>Subtracts the data stored in register R&lt;i1&gt; from the contents of register R&lt;i2&gt; (or immediate value) and stores in RR&lt;o&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="mov">
+                <cmd-title>MOV</cmd-title>
+                <cmd-eg>MOV R&lt;n1&gt; R&lt;n2&gt;</cmd-eg>
+                <cmd-desc>Loads into register R&lt;n&gt; the contents of register R&lt;n2&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="cmp">
+                <cmd-title>CMP</cmd-title>
+                <cmd-eg>CMP R&lt;n1&gt; R&lt;n2&gt;</cmd-eg>
+                <cmd-desc>Compares data stored in R&lt;n&gt; with the the data stored in register R&lt;n2&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="b">
+                <cmd-title>B</cmd-title>
+                <cmd-eg>B &lt;label&gt;</cmd-eg>
+                <cmd-desc>Branch to &lt;label&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="beq">
+                <cmd-title>BEQ</cmd-title>
+                <cmd-eg>BEQ &lt;label&gt;</cmd-eg>
+                <cmd-desc>Branch to &lt;label&gt; if previous comparison was equal.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="bgt">
+                <cmd-title>BGT</cmd-title>
+                <cmd-eg>BGT &lt;label&gt;</cmd-eg>
+                <cmd-desc>Branch to &lt;label&gt; if previous comparison was greater than.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="blt">
+                <cmd-title>BLT</cmd-title>
+                <cmd-eg>BLT &lt;label&gt;</cmd-eg>
+                <cmd-desc>Branch to &lt;label&gt; if previous comparison was less than.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="bne">
+                <cmd-title>BNE</cmd-title>
+                <cmd-eg>BNE &lt;label&gt;</cmd-eg>
+                <cmd-desc>Branch to &lt;label&gt; if previous comparison was not equal.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="and">
+                <cmd-title>AND</cmd-title>
+                <cmd-eg>AND R&lt;o&gt; R&lt;n1&gt; R&lt;n2&gt;</cmd-eg>
+                <cmd-desc>Performs bitwise AND on the data stored in register R&lt;n1&gt; with the contents of register R&lt;n2&gt; and stores in R&lt;o&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="orr">
+                <cmd-title>ORR</cmd-title>
+                <cmd-eg>ORR R&lt;o&gt; R&lt;n1&gt; R&lt;n2&gt;</cmd-eg>
+                <cmd-desc>Performs bitwise OR on the data stored in register R&lt;n1&gt; with the contents of register R&lt;n2&gt; and stores in R&lt;o&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="eor">
+                <cmd-title>EOR</cmd-title>
+                <cmd-eg>EOR R&lt;o&gt; R&lt;n1&gt; R&lt;n2&gt;</cmd-eg>
+                <cmd-desc>Performs bitwise XOR on the data stored in register R&lt;n1&gt; with the contents of register R&lt;n2&gt; and stores in R&lt;o&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="mvn">
+                <cmd-title>MVN</cmd-title>
+                <cmd-eg>MVN R&lt;o&gt; R&lt;n&gt;</cmd-eg>
+                <cmd-desc>Performs bitwise NOT on the data stored in register R&lt;n&gt; and stores in R&lt;o&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="lsl">
+                <cmd-title>LSL</cmd-title>
+                <cmd-eg>LSL R&lt;o&gt; R&lt;n1&gt; R&lt;n2&gt;</cmd-eg>
+                <cmd-desc>Logically shifts the data stored in register R&lt;n1&gt; to the left by the number of bits specified in R&lt;n2&gt; and stores in R&lt;o&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+            <editor-autocomplete-cmd cmd="lsr">
+                <cmd-title>LSR</cmd-title>
+                <cmd-eg>LSR R&lt;o&gt; R&lt;n1&gt; R&lt;n2&gt;</cmd-eg>
+                <cmd-desc>Logically shifts the data stored in register R&lt;n1&gt; to the right by the number of bits specified in R&lt;n2&gt; and stores in R&lt;o&gt;.</cmd-desc>
+            </editor-autocomplete-cmd>
+        </editor-autocomplete>
 	</editor-code>
     <editor-sidebar>
         <editor-sidebar-panel-title>Debug</editor-sidebar-panel-title>
@@ -35,8 +122,15 @@
         <editor-debug-memorysize>Memory locations 0-1024 are available.</editor-debug-memorysize>
     </editor-sidebar>
   </body>
+
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+  <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="./jquery.caret.js"></script>
+  <script>if (window.module) module = window.module;</script>
+
   <script>
 	// Initialise Render Process
 	require('./renderer.js');
+    require('./autocompleter.js');
   </script>
 </html>
