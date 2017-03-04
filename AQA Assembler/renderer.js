@@ -13,6 +13,7 @@ ipcRenderer.send('selectfile', '');
 // User selected file
 ipcRenderer.on('selectedfile', (event, arg) => {
     document.getElementById('filename').innerHTML = path.basename(arg[0]);
+    wrking_file = arg[0];
     ipcRenderer.send('open', arg[0]);
 });
 
