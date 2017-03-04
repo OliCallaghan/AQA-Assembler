@@ -10,6 +10,8 @@ var addon = require('bindings')('addon.node');
 const electron = require('electron');
 const {ipcMain} = require('electron');
 const {dialog} = require('electron');
+const {globalShortcut} = require('electron');
+const {Menu} = require('electron');
 
 // Initialise Electron App
 const app = electron.app;
@@ -36,7 +38,7 @@ function createWindow() {
     }));
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 
     // IPC Communications with the Render Process
     // Listen on channel to run ASM
@@ -55,9 +57,7 @@ function createWindow() {
 
     // Listen on channel to prompt user to select file
     ipcMain.on('selectfile', (event, arg) => {
-        event.sender.send('selectedfile', dialog.showOpenDialog({
-            properties: ['openFile']
-        }));
+        selectFile(event.sender);
     });
 
     // Listen on channel to open file
@@ -68,10 +68,23 @@ function createWindow() {
         });
     });
 
+    ipcMain.on('savenewfile', (event, arg) => {
+        var path = dialog.showSaveDialog({ title: 'Create New AQA Assembler File' });
+        fs.writeFile(path, arg, function(err) {
+            event.returnValue = { path: path, err: err };
+        });
+    });
+
     // Clean up main window
     mainWindow.on('closed', function() {
         mainWindow = null;
     });
+}
+
+function selectFile(e) {
+    e.send('selectedfile', dialog.showOpenDialog({
+        properties: ['openFile']
+    }));
 }
 
 // Electron app has initialised
@@ -90,4 +103,9 @@ app.on('activate', function() {
         // Create new window
         createWindow();
     }
+});
+
+app.on('will-quit', function () {
+    // Unregister all keyboard shortcuts
+    globalShortcut.unregisterAll();
 });
