@@ -163,6 +163,7 @@ editor-autocomplete-cmd {
 	height: 32px;
 	overflow: hidden;
 	transition: height;
+	cursor: pointer;
 }
 
 editor-autocomplete-cmd.selected {
@@ -180,6 +181,11 @@ editor-autocomplete-cmd cmd-title {
 	padding-top: 5px;
 	padding-bottom: 5px;
 	font-size: 16px;
+	transition: background 0.2s;
+}
+
+editor-autocomplete-cmd cmd-title:hover {
+	background: #93B0CC;
 }
 
 editor-autocomplete-cmd.selected cmd-title {

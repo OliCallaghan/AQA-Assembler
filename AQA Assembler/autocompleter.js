@@ -22,18 +22,16 @@ function setAutocompletePosition() {
     if (min < 0) { min = 0; }
 	$('editor-autocomplete').css('visibility', 'visible');
 
-	var tokens = code.val().substr(pos - 3, 6).replace(/\n/g, " ").split(' ');
+	var min = pos - 4;
+	if (min < 0) { min = 0; }
+	var tokens = code.val().substr(min, 8).replace(/\n/g, " ").split(' ');
 	for (token in tokens) {
 		if (keywords.indexOf(tokens[token].toLowerCase()) > -1) {
 			$('editor-autocomplete-cmd.selected').removeClass('selected');
 			$('editor-autocomplete-cmd[cmd="' + tokens[token].toLowerCase() + '"]').addClass('selected');
 
-			// scroll
-			var container = $('editor-autocomplete');
-			var scrollTo = $('editor-autocomplete-cmd.selected');
-
-			console.log(tokens[token].toLowerCase());
-			container.animate({ scrollTop: scrollTo.offset().top - container.offset().top + container.scrollTop() }, 100);
+			scrollToAutocompleteHighlighted();
+			break;
 		}
 	}
 
@@ -53,6 +51,16 @@ function setAutocompletePosition() {
 	if ($('#code').height() - offset.top < 100) {
 		$('editor-autocomplete').css({ 'top': (($('#code').height() - 280) + offset.top - ($('#code').height() - 20)) + 'px', 'height':'200px' });
 	}
+}
+
+function scrollToAutocompleteHighlighted() {
+	// Scroll to selected autocomplete
+	var container = $('editor-autocomplete');
+	var scrollTo = $('editor-autocomplete-cmd.selected');
+
+	container.animate({
+		scrollTop: scrollTo.offset().top - container.offset().top + container.scrollTop()
+	}, 100);
 }
 
 function nextCmd() {
@@ -79,17 +87,34 @@ $('#code').keyup(function (e) {
 	}
 });
 
+var constrict_tab = false;
+
 $('#code').keydown(function (e) {
 	if (e.keyCode == 9) {
 		e.preventDefault();
-		clearTimeout(fadeouttimer);
-		fadeout(5000);
-		if (e.shiftKey) {
-			prevCmd();
+		if (constrict_tab == true) {
+			fillTemplate();
 		} else {
-			nextCmd();
+			if ($('editor-autocomplete').css('visibility') != 'visible') {
+				setAutocompletePosition();
+			} else {
+				clearTimeout(fadeouttimer);
+				fadeout(5000);
+				if (e.shiftKey) {
+					prevCmd();
+				} else {
+					nextCmd();
+				}
+				scrollToAutocompleteHighlighted();
+			}
 		}
-
+	} else if (e.keyCode == 13) {
+		if (e.shiftKey) {
+			e.preventDefault();
+			insert($('editor-autocomplete-cmd.selected'));
+		}
+	} else if (e.keyCode <= 40 && e.keyCode >= 37) {
+		constrict_tab = false;
 	}
 });
 
@@ -103,4 +128,81 @@ $('editor-autocomplete').mouseenter(function () {
     clearTimeout(fadeouttimer);
 }).mouseleave(function () {
     fadeout(fadeout_dur);
+});
+
+function insert(obj) {
+	var code = $('#code');
+	var pos = code.caret('pos');
+
+	var insert = obj.children('cmd-eg').text();
+	last_inst_template = obj.children('cmd-eg').text();
+	var code_val = code.val();
+
+	var pos_min = pos - 1;
+	while (pos_min >= 0 && code_val.substr(pos_min, 1) != '\n') {
+		pos_min -= 1;
+	}
+
+	var pos_max = pos - 1;
+	while (pos_max < code_val.length && code_val.substr(pos_max, 1) != '\n') {
+		pos_max += 1;
+	}
+
+	var front = code_val.substring(0,pos_min + 1);
+	var back = code_val.substring(pos_max, code_val.length);
+
+	code.val(front + insert + back);
+
+	var regex = /<\w+>/g;
+	var selections = [];
+	while ((match = regex.exec(insert)) != null) {
+		selections.push(match);
+	}
+
+	if (selections.length > 0) {
+		document.getElementById('code').setSelectionRange(pos_min + selections[0].index + 1, pos_min + selections[0].index + selections[0][0].length + 1);
+	} else {
+		code.caret('pos', pos_max);
+	}
+
+	constrict_tab = true;
+}
+
+function fillTemplate() {
+	var code = $('#code');
+	var pos = code.caret('pos');
+	var code_val = code.val();
+
+	var pos_min = pos - 1;
+	while (pos_min >= 0 && code_val.substr(pos_min, 1) != '\n') {
+		pos_min -= 1;
+	}
+
+	var pos_max = pos - 1;
+	while (pos_max < code_val.length && code_val.substr(pos_max, 1) != '\n') {
+		pos_max += 1;
+	}
+
+	var regex = /<\w+>/g;
+	var selections = [];
+	while ((match = regex.exec(code_val.substring(pos_min, pos_max))) != null) {
+		selections.push(match);
+	}
+
+	if (selections.length > 0) {
+		if (pos_min <= 0) {
+			document.getElementById('code').setSelectionRange(pos_min + selections[0].index + 1, pos_min + selections[0].index + selections[0][0].length + 1);
+		} else {
+			document.getElementById('code').setSelectionRange(pos_min + selections[0].index, pos_min + selections[0].index + selections[0][0].length);
+		}
+	} else {
+		code.caret('pos', pos_max);
+	}
+}
+
+$('editor-autocomplete-cmd').click(function () {
+	insert($(this));
+
+	setAutocompletePosition();
+	clearTimeout(fadeouttimer)
 });

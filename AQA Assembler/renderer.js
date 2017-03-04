@@ -109,7 +109,7 @@ const template = [
         {
             label: 'Save',
             accelerator: 'CmdOrCtrl+S',
-          click () { save(); }
+          click () { console.log(wrking_file); if (wrking_file == undefined) { saveas(); } else {save();} }
         },
         {
             label: 'Save As...',
