@@ -13,8 +13,10 @@ node-gyp build
 electron .
 ```
 
-There are a few simple keyboard shortcuts with this program:
+## Keyboard Shortcuts
 
 `TAB` cycles through the autocompletion menu
+
 `SHIFT+TAB` cycles back through the autocompletion menu
+
 `SHIFT+ENTER` inserts selected autocompletion code template, then, use `TAB` to jump to the next argument.
