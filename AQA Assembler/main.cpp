@@ -471,7 +471,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 2 arguements");
             }
         } else if (cmd == "STR ") {
             // STR Command
@@ -493,7 +493,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 2 arguements");
             }
         } else if (cmd == "ADD ") {
             // ADD Command
@@ -517,7 +517,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 3 arguements");
             }
         } else if (cmd == "SUB ") {
             // SUB Command
@@ -541,7 +541,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 3 arguements");
             }
         } else if (cmd == "MOV ") {
             // MOV Command
@@ -565,7 +565,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 2 arguements");
             }
         } else if (cmd == "CMP ") {
             // CMP Command
@@ -589,7 +589,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 2 arguements");
             }
         } else if (program[pc].substr(0,2) == "B ") {
             // Branch
@@ -628,7 +628,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 3 arguements");
             }
         } else if (cmd == "ORR ") {
             // ORR Command
@@ -652,7 +652,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 3 arguements");
             }
         } else if (cmd == "EOR ") {
             // EOR Command
@@ -676,7 +676,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 3 arguements");
             }
         } else if (cmd == "MVN ") {
             // MVN Command
@@ -700,7 +700,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 2 arguements");
             }
         } else if (cmd == "LSL ") {
             // LSL Command
@@ -724,7 +724,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 3 arguements");
             }
         } else if (cmd == "LSR ") {
             // LSR Command
@@ -748,7 +748,7 @@ void run(const FunctionCallbackInfo<Value>& args) {
             } else {
                 std::cout << "Not enough arguements\n";
                 err = true;
-                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
+                err_list.push_back("Line " + std::to_string(pc) + ": Expected 3 arguements");
             }
         } else if (program[pc].substr(0,4) == "HALT") {
             // HALT

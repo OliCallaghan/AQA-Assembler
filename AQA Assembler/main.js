@@ -44,7 +44,6 @@ function createWindow() {
     // Listen on channel to run ASM
     ipcMain.on('run', (event, arg) => {
         addon.run(arg, function(rtrn) {
-            console.log(typeof(rtrn[0]));
             if (typeof(rtrn[0]) == 'string') {
                 event.sender.send('error', rtrn);
             } else {
