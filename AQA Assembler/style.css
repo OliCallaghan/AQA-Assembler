@@ -48,13 +48,8 @@ editor-code {
 	position: absolute;
 	display: block;
 	height: calc(100% - 50px);
-	/*padding-left: 15px;
-	padding-right: 15px;
-	padding-top: 20px;
-	padding-bottom: 20px;*/
 	top:50px;
 	left: 0px;
-	/*width: calc(100% - 240px);*/
 	width:calc(100% - 210px);
 	border-right: 1px solid #93B0CC;
 	background: #fff;
