@@ -74,9 +74,14 @@ function createWindow() {
 
     ipcMain.on('savenewfile', (event, arg) => {
         var path = dialog.showSaveDialog({ title: 'Create New AQA Assembler File' });
-        fs.writeFile(path, arg, function(err) {
-            event.returnValue = { path: path, err: err };
-        });
+        if (path) {
+            fs.writeFile(path, arg, function(err) {
+                event.returnValue = { path: path, err: err };
+            });
+        } else {
+            event.returnValue = { err: 'no_selection' }
+        }
+
     });
 
     // Clean up main window
@@ -86,9 +91,15 @@ function createWindow() {
 }
 
 function selectFile(e) {
-    e.send('selectedfile', dialog.showOpenDialog({
+    var res = dialog.showOpenDialog({
         properties: ['openFile']
-    }));
+    });
+
+    if (res) {
+        e.send('selectedfile', res);
+    } else {
+        return false;
+    }
 }
 
 // Electron app has initialised
