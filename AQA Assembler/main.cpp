@@ -57,7 +57,6 @@ params extractRegisterParameters(std::string line) {
         p.pos.push_back(static_cast<int>(match.position()));
         p.type.push_back(0);
 
-        std::cout << "Register: " << p.data[size - 1] << "\n";
         next++;
     }
 
@@ -80,7 +79,6 @@ params extractImmediateParameters(std::string line) {
         p.pos.push_back(static_cast<int>(match.position()));
         p.type.push_back(1);
 
-        std::cout << "Immediate: " << p.data[size - 1] << "\n";
         next++;
     }
 
@@ -103,7 +101,6 @@ params extractDirectParameters(std::string line) {
         p.pos.push_back(static_cast<int>(match.position()));
         p.type.push_back(2);
 
-        std::cout << "Direct: " << p.data[size - 1] << "\n";
         next++;
     }
 
@@ -460,11 +457,8 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 2)) {
-                    std::cout << "LDR R" << p.data[0] << " " << p.data[1] << "\n";
                     assembler.LDR(static_cast<unsigned int>(p.data[0]), p.data[1]);
                 } else {
                     std::cout << "Expected register number and direct memory address\n";
@@ -481,11 +475,8 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 2)) {
-                    std::cout << "STR R" << p.data[0] << " " << p.data[1] << "\n";
                     assembler.STR(static_cast<unsigned int>(p.data[0]), p.data[1]);
                 } else {
                     std::cout << "Expected register number and direct memory address\n";
@@ -502,14 +493,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
-                    std::cout << "ADD R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
                     assembler.ADD(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 1)) {
-                    std::cout << "ADD R" << p.data[0] << " R" << p.data[1] << " #" << p.data[2] << "\n";
                     assembler.ADD(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
@@ -526,14 +513,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
-                    std::cout << "SU  R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
                     assembler.SUB(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 1)) {
-                    std::cout << "SUB R" << p.data[0] << " R" << p.data[1] << " #" << p.data[2] << "\n";
                     assembler.SUB(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
@@ -550,14 +533,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 0)) {
-                    std::cout << "ADD R" << p.data[0] << " R" << p.data[1] << "\n";
                     assembler.MOV(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 1)) {
-                    std::cout << "ADD R" << p.data[0] << " #" << p.data[1] << "\n";
                     assembler.MOV(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), false);
                 } else {
                     std::cout << "Expected desination register number and operand\n";
@@ -574,14 +553,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 0)) {
-                    std::cout << "CMP R" << p.data[0] << " R" << p.data[1] << "\n";
                     assembler.CMP(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 1)) {
-                    std::cout << "CMP R" << p.data[0] << " #" << p.data[1] << "\n";
                     assembler.CMP(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), false);
                 } else {
                     std::cout << "Expected desination register number and operand\n";
@@ -613,14 +588,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
-                    std::cout << "AND R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
                     assembler.AND(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 1)) {
-                    std::cout << "AND R" << p.data[0] << " R" << p.data[1] << " #" << p.data[2] << "\n";
                     assembler.AND(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
@@ -637,14 +608,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
-                    std::cout << "ORR R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
                     assembler.ORR(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 1)) {
-                    std::cout << "ORR R" << p.data[0] << " R" << p.data[1] << " #" << p.data[2] << "\n";
                     assembler.ORR(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
@@ -661,14 +628,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
-                    std::cout << "EOR R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
                     assembler.EOR(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 1)) {
-                    std::cout << "EOR R" << p.data[0] << " R" << p.data[1] << " #" << p.data[2] << "\n";
                     assembler.EOR(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
@@ -685,14 +648,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 2) {
                 if ((p.type[0] == 0) && (p.type[1] == 0)) {
-                    std::cout << "MVN R" << p.data[0] << " R" << p.data[1] << "\n";
                     assembler.MVN(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 1)) {
-                    std::cout << "MVN R" << p.data[0] << " #" << p.data[1] << "\n";
                     assembler.MVN(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), false);
                 } else {
                     std::cout << "Expected desination register number and operand\n";
@@ -709,14 +668,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
-                    std::cout << "LSL R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
                     assembler.LSL(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 1)) {
-                    std::cout << "LSL R" << p.data[0] << " R" << p.data[1] << " #" << p.data[2] << "\n";
                     assembler.LSL(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
@@ -733,14 +688,10 @@ void run(const FunctionCallbackInfo<Value>& args) {
 
             params p = combineParamsInOrder(p_r, p_i, p_d);
 
-            std::cout << p.type[0] << p.type[1];
-
             if (p.type.size() == 3) {
                 if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 0)) {
-                    std::cout << "LSR R" << p.data[0] << " R" << p.data[1] << " R" << p.data[2] << "\n";
                     assembler.LSR(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), true);
                 } else if ((p.type[0] == 0) && (p.type[1] == 0) && (p.type[2] == 1)) {
-                    std::cout << "LSR R" << p.data[0] << " R" << p.data[1] << " #" << p.data[2] << "\n";
                     assembler.LSR(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
@@ -753,37 +704,28 @@ void run(const FunctionCallbackInfo<Value>& args) {
             pc = program.size();
         } else if (program[pc].back() == ':') {
             // Label
-            std::cout << "Reached Label";
         } else {
-            // throw "ERROR";
+            std::cout << "Unknown instruction\n";
         }
 
-        // Callback with Register data
-        // unsigned long int r_data[12];
+        // Initialise V8 array for each register's contents
         Local<Array> r_e_data = Array::New(isolate, 12);
         for (int r = 0; r < 12; r++) {
+            // Add data to array
             r_e_data->Set(r, Integer::New(isolate, assembler.getRegisterData(r)));
         }
-
+        // Cast callback arguement to V8 function
         Local<Function> cb = Local<Function>::Cast(args[1]);
         const unsigned argc = 1;
+        // Initialise function's arguements
         Local<Value> argv[argc] = { r_e_data };
+        // Call function
         cb->Call(Null(isolate), argc, argv);
     }
-
-    assembler.displayRegisters();
-
-    Local<Number> r_data =  Number::New(isolate, assembler.getRegisterData(1));
-    args.GetReturnValue().Set(r_data);
-}
-
-int main(int argc, const char * argv[]) {
-    std::cout << "AQA Assembler Runtime\n";
-    //run("/Users/Oli/Documents/CRGS/Computer Science Society/AQA Assembler/AQA Assembler/test.asm");
-    return 0;
 }
 
 void Init(Handle<Object> exports) {
+    // Set 'run' method
     NODE_SET_METHOD(exports, "run", run);
 }
 
