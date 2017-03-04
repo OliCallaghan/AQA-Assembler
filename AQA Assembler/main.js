@@ -43,8 +43,13 @@ function createWindow() {
     // IPC Communications with the Render Process
     // Listen on channel to run ASM
     ipcMain.on('run', (event, arg) => {
-        addon.run(arg, function(registers) {
-            event.sender.send('registers', registers);
+        addon.run(arg, function(rtrn) {
+            console.log(typeof(rtrn[0]));
+            if (typeof(rtrn[0]) == 'string') {
+                event.sender.send('error', rtrn);
+            } else {
+                event.sender.send('registers', rtrn);
+            }
         });
     });
 

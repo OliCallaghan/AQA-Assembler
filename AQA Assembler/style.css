@@ -96,6 +96,11 @@ editor-sidebar-panel-title {
 	margin-bottom: 5px;
 }
 
+editor-sidebar-panel-title.errors {
+	background: #CC0000;
+	color: #FEF8F6;
+}
+
 editor-debug-register {
 	position: relative;
 	display: block;
@@ -211,4 +216,31 @@ editor-autocomplete-cmd cmd-desc {
 	padding-left: 7px;
 	padding-right: 7px;
 	padding-bottom: 5px;
+}
+
+editor-debug-list {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	padding-bottom: 5px;
+}
+
+editor-debug-err {
+	position: relative;
+	display: block;
+	width: 100%;
+	font-size: 12px;
+	color: #CC0000;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+editor-sidebar-panel-title.hidden {
+	display: none;
+}
+
+editor-debug-list.hidden {
+	display: none;
 }

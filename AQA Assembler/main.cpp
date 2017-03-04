@@ -410,6 +410,9 @@ public:
 };
 
 void run(const FunctionCallbackInfo<Value>& args) {
+    bool err = false;
+    std::vector<std::string> err_list;
+
     Isolate* isolate = Isolate::GetCurrent();
     HandleScope scope(isolate);
 
@@ -462,9 +465,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.LDR(static_cast<unsigned int>(p.data[0]), p.data[1]);
                 } else {
                     std::cout << "Expected register number and direct memory address\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected register number and direct memory address");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "STR ") {
             // STR Command
@@ -480,9 +487,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.STR(static_cast<unsigned int>(p.data[0]), p.data[1]);
                 } else {
                     std::cout << "Expected register number and direct memory address\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected register number and direct memory address");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "ADD ") {
             // ADD Command
@@ -500,9 +511,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.ADD(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected desination register number, register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "SUB ") {
             // SUB Command
@@ -520,9 +535,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.SUB(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected desination register number, register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "MOV ") {
             // MOV Command
@@ -540,9 +559,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.MOV(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), false);
                 } else {
                     std::cout << "Expected desination register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected desination register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "CMP ") {
             // CMP Command
@@ -560,9 +583,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.CMP(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), false);
                 } else {
                     std::cout << "Expected desination register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected desination register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (program[pc].substr(0,2) == "B ") {
             // Branch
@@ -595,9 +622,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.AND(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": EExpected desination register number, register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "ORR ") {
             // ORR Command
@@ -615,9 +646,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.ORR(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected desination register number, register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "EOR ") {
             // EOR Command
@@ -635,9 +670,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.EOR(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected desination register number, register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "MVN ") {
             // MVN Command
@@ -655,9 +694,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.MVN(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), false);
                 } else {
                     std::cout << "Expected desination register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected desination register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "LSL ") {
             // LSL Command
@@ -675,9 +718,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.LSL(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected desination register number, register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (cmd == "LSR ") {
             // LSR Command
@@ -695,9 +742,13 @@ void run(const FunctionCallbackInfo<Value>& args) {
                     assembler.LSR(static_cast<unsigned int>(p.data[0]), static_cast<unsigned int>(p.data[1]), static_cast<unsigned int>(p.data[2]), false);
                 } else {
                     std::cout << "Expected desination register number, register number and operand\n";
+                    err = true;
+                    err_list.push_back("Line " + std::to_string(pc) + ": Expected desination register number, register number and operand");
                 }
             } else {
                 std::cout << "Not enough arguements\n";
+                err = true;
+                err_list.push_back("Line " + std::to_string(pc) + ": Not enough arguements");
             }
         } else if (program[pc].substr(0,4) == "HALT") {
             // HALT
@@ -706,19 +757,39 @@ void run(const FunctionCallbackInfo<Value>& args) {
             // Label
         } else {
             std::cout << "Unknown instruction\n";
+            err = true;
+            err_list.push_back("Line " + std::to_string(pc) + ": Unknown instruction");
         }
 
+        if (!err) {
+            // Initialise V8 array for each register's contents
+            Local<Array> r_e_data = Array::New(isolate, 12);
+            for (int r = 0; r < 12; r++) {
+                // Add data to array
+                r_e_data->Set(r, Integer::New(isolate, assembler.getRegisterData(r)));
+            }
+            // Cast callback arguement to V8 function
+            Local<Function> cb = Local<Function>::Cast(args[1]);
+            const unsigned argc = 1;
+            // Initialise function's arguements
+            Local<Value> argv[argc] = { r_e_data };
+            // Call function
+            cb->Call(Null(isolate), argc, argv);
+        }
+    }
+
+    if (err) {
         // Initialise V8 array for each register's contents
-        Local<Array> r_e_data = Array::New(isolate, 12);
-        for (int r = 0; r < 12; r++) {
+        Local<Array> err_data = Array::New(isolate, err_list.size());
+        for (int r = 0; r < err_list.size(); r++) {
             // Add data to array
-            r_e_data->Set(r, Integer::New(isolate, assembler.getRegisterData(r)));
+            err_data->Set(r, String::NewFromUtf8(isolate, err_list[r].c_str()));
         }
         // Cast callback arguement to V8 function
         Local<Function> cb = Local<Function>::Cast(args[1]);
         const unsigned argc = 1;
         // Initialise function's arguements
-        Local<Value> argv[argc] = { r_e_data };
+        Local<Value> argv[argc] = { err_data };
         // Call function
         cb->Call(Null(isolate), argc, argv);
     }

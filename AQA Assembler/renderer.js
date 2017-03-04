@@ -38,6 +38,23 @@ ipcRenderer.on('registers', (event, arg) => {
             registers[register].childNodes[2].innerHTML = arg[register];
         }
     }
+
+    $('#err_log').addClass('hidden');
+    $('.errors').addClass('hidden');
+});
+
+// Error data recieved
+ipcRenderer.on('error', (event, arg) => {
+    // Update GUI with this data
+    console.log('this');
+    var err_log = document.getElementById("err_log");
+    $('#err_log').removeClass('hidden');
+    $('.errors').removeClass('hidden');
+    var err_log_html = '';
+    for (err in arg) {
+        err_log_html += `<editor-debug-err>${arg[err]}</editor-debug-err>`;
+    }
+    err_log.innerHTML = err_log_html;
 });
 
 // Add handler for run button
