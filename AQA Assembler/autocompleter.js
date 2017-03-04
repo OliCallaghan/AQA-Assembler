@@ -159,13 +159,14 @@ function insert(obj) {
 		selections.push(match);
 	}
 
+	constrict_tab = true;
+
 	if (selections.length > 0) {
 		document.getElementById('code').setSelectionRange(pos_min + selections[0].index + 1, pos_min + selections[0].index + selections[0][0].length + 1);
 	} else {
 		code.caret('pos', pos_max);
+		constrict_tab = false;
 	}
-
-	constrict_tab = true;
 }
 
 function fillTemplate() {
@@ -197,6 +198,7 @@ function fillTemplate() {
 		}
 	} else {
 		code.caret('pos', pos_max);
+		constrict_tab = false;
 	}
 }
 
