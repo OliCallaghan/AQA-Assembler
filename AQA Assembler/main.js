@@ -1,88 +1,93 @@
-var addon = require('bindings')('addon.node');
-const electron = require('electron');
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
-const {ipcMain} = require('electron')
-const {dialog} = require('electron')
+// Import Native NodeJS Libraries
+const path = require('path');
+const url = require('url');
 const fs = require('fs');
 
+// Import AQA-Assembler Emulator
+var addon = require('bindings')('addon.node');
 
-const path = require('path')
-const url = require('url')
+// Import Electron Dependencies
+const electron = require('electron');
+const {ipcMain} = require('electron');
+const {dialog} = require('electron');
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+// Initialise Electron App
+const app = electron.app;
+
+// Initialise Window Controller
+const BrowserWindow = electron.BrowserWindow
+
+// Prevent window closing from JS garbage collector :O
 let mainWindow
 
-function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+// Called when the Electron app initialises
+function createWindow() {
+    // Create the browser window
+    mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600
+    });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+    // Load HTML for browser window
+    mainWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true
+    }));
 
-  // Open the DevTools.
-  //mainWindow.webContents.openDevTools()
-  
+    // Open the DevTools.
+    // mainWindow.webContents.openDevTools()
+
+    // IPC Communications with the Render Process
+    // Listen on channel to run ASM
     ipcMain.on('run', (event, arg) => {
-        addon.run(arg, function (registers) {
+        addon.run(arg, function(registers) {
             event.sender.send('registers', registers);
         });
     });
 
+    // Listen on channel to save file contents
     ipcMain.on('save', (event, arg) => {
-        fs.writeFile(arg.path, arg.data, function (err) {
+        fs.writeFile(arg.path, arg.data, function(err) {
             event.returnValue = true;
-        })
+        });
     });
 
+    // Listen on channel to prompt user to select file
     ipcMain.on('selectfile', (event, arg) => {
-        console.log('hello!');
-        event.sender.send('selectedfile', dialog.showOpenDialog({properties: ['openFile']}));
+        event.sender.send('selectedfile', dialog.showOpenDialog({
+            properties: ['openFile']
+        }));
     });
 
+    // Listen on channel to open file
     ipcMain.on('open', (event, arg) => {
-        fs.readFile(arg, function (err, data) {
+        fs.readFile(arg, function(err, data) {
+            // Return contents to render process
             event.sender.send('opened', data);
         });
     });
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null
-  })
+    // Clean up main window
+    mainWindow.on('closed', function() {
+        mainWindow = null;
+    });
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+// Electron app has initialised
+app.on('ready', createWindow);
 
-// Quit when all windows are closed.
-app.on('window-all-closed', function () {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+// Exit electron app when all windows are closed (except on Mac)
+app.on('window-all-closed', function() {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
 
-app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+// Re-open window on Mac if Main Window was closed and dock icon was clicked.
+app.on('activate', function() {
+    if (mainWindow === null) {
+        // Create new window
+        createWindow();
+    }
+});
