@@ -1,0 +1,29 @@
+{
+  "name": "AQA-Assembler",
+  "version": "0.1.0",
+  "description": "AQA Assembler Emulator",
+  "author": "Oli Callaghan",
+  "private": true,
+  "dependencies": {
+    "bindings": "1.2.1",
+    "nan": "2.5.1"
+  },
+  "devDependencies": {
+    "electron-rebuild": "^1.5.7",
+    "electron": "1.6.1"
+  },
+  "build": {
+    "appId": "aqa.assembler",
+    "mac": {
+      "category": "developer"
+    },
+    "electronVersion": "1.2.6"
+  },
+  "scripts": {
+	  "postinstall": "install-app-deps",
+      "start": "electron ./app --enable-logging",
+      "dev": "NODE_ENV='development' npm run start",
+	  "pack": "build --dir",
+      "dist": "build -mwl --x64 --ia32"
+  }
+}

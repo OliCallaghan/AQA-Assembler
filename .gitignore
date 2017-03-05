@@ -32,6 +32,9 @@
 *.asm
 
 # Platform specific (requires build on system)
-AQA\ Assembler/node_modules
-AQA\ Assembler/build
-AQA\ Assembler/npm-debug.log
+app/node_modules
+app/build
+app/npm-debug.log
+build
+dist
+node_modules

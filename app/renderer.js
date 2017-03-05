@@ -249,7 +249,7 @@ const template = [
 
 if (process.platform === 'darwin') {
   template.unshift({
-    label: 'AQA',
+    label: 'AQA Assembler',
     submenu: [
       {
           label: 'About',

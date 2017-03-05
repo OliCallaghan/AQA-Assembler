@@ -38,7 +38,7 @@ function createWindow() {
     }));
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
     // IPC Communications with the Render Process
     // Listen on channel to run ASM
