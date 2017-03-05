@@ -298,7 +298,7 @@ public:
     int BEQ(std::string label, unsigned long *pc) {
         if (sr == 0) {
             // Branch
-            this->B(label, pc);
+            B(label, pc);
         }
         return 0;
     }
@@ -593,19 +593,19 @@ void run(const FunctionCallbackInfo<Value>& args) {
             }
         } else if (program[pc].substr(0,2) == "B ") {
             // Branch
-            assembler.B(program[pc].substr(2,program[pc].length()), &pc);
+            assembler.B(program[pc].substr(2,program[pc].length() - 3), &pc);
         } else if (cmd == "BEQ ") {
             // BEQ Command
-            assembler.BEQ(program[pc].substr(4,program[pc].length()), &pc);
+            assembler.BEQ(program[pc].substr(4,program[pc].length() - 5), &pc);
         } else if (cmd == "BNE ") {
             // BNE Command
-            assembler.BNE(program[pc].substr(4,program[pc].length()), &pc);
+            assembler.BNE(program[pc].substr(4,program[pc].length() - 5), &pc);
         } else if (cmd == "BGT ") {
             // BGT Command
-            assembler.BGT(program[pc].substr(4,program[pc].length()), &pc);
+            assembler.BGT(program[pc].substr(4,program[pc].length() - 5), &pc);
         } else if (cmd == "BLT ") {
             // BLT Command
-            assembler.BLT(program[pc].substr(4,program[pc].length()), &pc);
+            assembler.BLT(program[pc].substr(4,program[pc].length() - 5), &pc);
         } else if (cmd == "AND ") {
             // AND Command
             std::string params_s = program[pc].substr(4,program[pc].length() - 1);
