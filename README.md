@@ -7,8 +7,9 @@ To test the program, run the following commands:
 
 ```
 git clone https://github.com/OliCallaghan/AQA-Assembler.git
-cd AQA-Assembler/AQA\ Assembler
+cd AQA-Assembler/app
 npm install
+node-gyp configure
 node-gyp build
 electron .
 ```
@@ -20,3 +21,17 @@ electron .
 `SHIFT+TAB` cycles back through the autocompletion menu
 
 `SHIFT+ENTER` inserts selected autocompletion code template, then, use `TAB` to jump to the next argument.
+
+## Building the Project
+Due to the project containing some C++ code, this must be compiled for the target system, so to do this run the following commands.
+```
+cd AQA-Assembler/app
+npm install
+node-gyp configure
+node-gyp build
+cd ..
+npm install
+npm run pack
+```
+
+This will build the project for only the target system and the resulting executable will be found in `dist` (still working on configuring electron-builder to rebuild the C++ addon for all target systems).

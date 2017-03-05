@@ -23,7 +23,7 @@
 	  "postinstall": "install-app-deps",
       "start": "electron ./app --enable-logging",
       "dev": "NODE_ENV='development' npm run start",
-	  "pack": "build --dir",
+	  "pack": "build",
       "dist": "build -mwl --x64 --ia32"
   }
 }
